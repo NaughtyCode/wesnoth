@@ -1526,6 +1526,9 @@
     <ClCompile Include="..\..\src\gui\dialogs\end_credits.cpp">
       <Filter>Gui\Dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\scripting\lua_preferences.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\addon\client.hpp">
@@ -2930,6 +2933,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gui\dialogs\end_credits.hpp">
       <Filter>Gui\Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scripting\lua_preferences.hpp">
+      <Filter>Scripting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
