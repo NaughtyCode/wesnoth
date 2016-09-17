@@ -31,6 +31,7 @@
 #include "gui/dialogs/lua_interpreter.hpp"
 #include "game_config_manager.hpp"
 #include "gui/dialogs/core_selection.hpp"
+#include "gui/dialogs/simple_item_selector.hpp"
 #include "gui/dialogs/multiplayer/mp_method_selection.hpp"
 #include "gui/dialogs/multiplayer/mp_host_game_prompt.hpp"
 #include "gui/dialogs/message.hpp"
@@ -379,6 +380,22 @@ void ttitle_screen::pre_show(twindow& window)
 			return;
 		}
 	});
+	register_button(window, "tests", hotkey::HOTKEY_NULL, [this](twindow& window) {
+		std::vector<std::string> options;
+		for(const config &sc : game_config_manager::get()->game_config().child_range("test")) {
+			const std::string &id = sc["id"];
+			options.push_back(id);
+		}
+		std::sort(options.begin(), options.end());
+		gui2::tsimple_item_selector dlg(_("Choose Test"), "", options);
+		dlg.show(game_.video());
+		int choice = dlg.selected_index();
+		if(choice >= 0) {
+			game_.set_test(options[choice]);
+			result_ = LAUNCH_GAME;
+			window.close();
+		}
+	});
 	register_button(window, "editor", hotkey::TITLE_SCREEN__EDITOR,
 		std::bind(&ttitle_screen::basic_callback, this, std::ref(window), MAP_EDITOR));
 	register_button(window, "cores", hotkey::TITLE_SCREEN__CORES, [this](twindow&) {
@@ -421,6 +438,10 @@ void ttitle_screen::pre_show(twindow& window)
 	auto cores = game_config_manager::get()->game_config().child_range("core");
 	if(cores.size() <= 1) {
 		find_widget<tbutton>(&window, "cores", false).set_visible(twindow::tvisible::invisible);
+	}
+
+	if(!game_config::debug) {
+		find_widget<tbutton>(&window, "tests", false).set_visible(twindow::tvisible::invisible);
 	}
 
 	window.connect_signal<event::SDL_VIDEO_RESIZE>(std::bind(&ttitle_screen::on_resize, this, std::ref(window)));
